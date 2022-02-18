@@ -1,6 +1,6 @@
 from rest_framework import serializers
+
 from ticket.models import *
-from django.contrib.auth.models import User
 
 
 class TicketSerializer(serializers.ModelSerializer):
@@ -17,20 +17,12 @@ class MessageSerializer(serializers.ModelSerializer):
         exclude = ['ticket', 'id']
 
 
-class MessageListSerializer(serializers.ModelSerializer):
+class TicketUpdateSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
-        model = Message
-        fields = ['id', 'owner', 'ticket', 'text', 'created']
-
-
-class MessageDetailSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
-
-    class Meta:
-        model = Message
-        fields = ['owner', 'ticket', 'text', 'created', 'ticket']
+        model = Ticket
+        fields = '__all__'
 
 
 class TicketListSerializer(serializers.ModelSerializer):
@@ -51,6 +43,28 @@ class TicketDetailSerializer(serializers.ModelSerializer):
         fields = ['id', 'owner', 'title', 'description', 'status', 'created', 'messages']
 
 
+class MessageListSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = Message
+        fields = ['id', 'owner', 'ticket', 'text', 'created']
+
+    def __init__(self, *args, **kwargs):
+        choice_ticket = []
+        super(MessageListSerializer, self).__init__(*args, **kwargs)
+        user = self.context['request'].user
+
+        if user.is_staff:
+            for choice in Ticket.objects.all():
+                choice_ticket.append(choice.title)
+            self.fields['ticket'] = serializers.ChoiceField(choices=choice_ticket)
+        else:
+            for choice in Ticket.objects.filter(owner=user):
+                choice_ticket.append(choice.title)
+            self.fields['ticket'] = serializers.ChoiceField(choices=choice_ticket)
+
+
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -63,4 +77,3 @@ class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'tickets']
-

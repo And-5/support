@@ -10,8 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-from pathlib import Path
 from datetime import timedelta
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ' '
+SECRET_KEY = 'django-insecure-58h5=obr1g4-h3(q%9jmne8%evyk37mrowgm69q!8mszjfgtdn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': 'support',
         'USER': 'postgres',
         'PASSWORD': '14863',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
@@ -133,14 +133,14 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-#smtp
+# smtp
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'test21@gmail.com'
 EMAIL_HOST_PASSWORD = 'test21'
 EMAIL_PORT = 587
 
-#REDIS and CELERY related
+# REDIS and CELERY related
 CELERY_REDIS_HOST = '0.0.0.0'
 CELERY_REDIS_PORT = '6379'
 CELERY_BROKER_URL = 'redis://' + CELERY_REDIS_HOST + ':' + CELERY_REDIS_PORT + '/0'
@@ -149,6 +149,7 @@ CELERY_RESULT_BACKEND = 'redis://' + CELERY_REDIS_HOST + ':' + CELERY_REDIS_PORT
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+CELERYD_TASK_TIME_LIMIT = 600
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -190,4 +191,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
