@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.fields import ChoiceField
 
 from ticket.models import *
 
@@ -51,18 +52,12 @@ class MessageListSerializer(serializers.ModelSerializer):
         fields = ['id', 'owner', 'ticket', 'text', 'created']
 
     def __init__(self, *args, **kwargs):
-        choice_ticket = []
         super(MessageListSerializer, self).__init__(*args, **kwargs)
         user = self.context['request'].user
-
         if user.is_staff:
-            for choice in Ticket.objects.all():
-                choice_ticket.append(choice.title)
-            self.fields['ticket'] = serializers.ChoiceField(choices=choice_ticket)
+            self.fields['ticket'].queryset = Ticket.objects.filter(status='unsolved')
         else:
-            for choice in Ticket.objects.filter(owner=user):
-                choice_ticket.append(choice.title)
-            self.fields['ticket'] = serializers.ChoiceField(choices=choice_ticket)
+            self.fields['ticket'].queryset = Ticket.objects.filter(owner=user).filter(status='unsolved')
 
 
 class UserListSerializer(serializers.ModelSerializer):
