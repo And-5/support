@@ -2,29 +2,22 @@ version: "3.6"
 
 services:
   db:
-    image: postgres:12.9-alpine
+    image: postgres:14-alpine
     restart: always
     volumes:
       - ./data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=support
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=14863
+    env_file: ./.db.env
     ports:
       - '5432:5432'
     network_mode: "host"
 
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/usr/src/support
     ports:
       - '8000:8000'
-    environment:
-        - POSTGRES_NAME=support
-        - POSTGRES_USER=postgres
-        - POSTGRES_PASSWORD=14863
+    env_file: ./.env
     depends_on:
       - db
     network_mode: "host"
@@ -37,13 +30,10 @@ services:
     restart: always
     build:
       context: .
-    command: celery -A support worker -l info
+    entrypoint: celery -A support worker -l info
     volumes:
       - .:/usr/src/support
-    environment:
-      - POSTGRES_NAME=support
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=14863
+    env_file: ./.env
     depends_on:
       - db
       - redis
