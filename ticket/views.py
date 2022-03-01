@@ -46,7 +46,6 @@ class TicketListView(generics.ListCreateAPIView):
         serializer.save(owner=self.request.user)
 
     def get(self, request, *args, **kwargs):
-        print(Ticket.objects.filter(owner=request.user))
         if request.user.is_staff:
             queryset = Ticket.objects.all()
         else:

@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from rest_framework.fields import ChoiceField
 
 from ticket.models import *
 
@@ -41,7 +40,7 @@ class TicketDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = ['id', 'owner', 'title', 'description', 'status', 'created', 'messages']
+        fields = ('id', 'owner', 'title', 'description', 'status', 'created', 'messages')
 
 
 class MessageListSerializer(serializers.ModelSerializer):
@@ -49,7 +48,7 @@ class MessageListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ['id', 'owner', 'ticket', 'text', 'created']
+        fields = ('id', 'owner', 'ticket', 'text', 'created')
 
     def __init__(self, *args, **kwargs):
         super(MessageListSerializer, self).__init__(*args, **kwargs)
@@ -63,7 +62,7 @@ class MessageListSerializer(serializers.ModelSerializer):
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email']
+        fields = ('id', 'username', 'email')
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
@@ -71,4 +70,4 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'tickets']
+        fields = ('id', 'username', 'tickets')
