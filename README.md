@@ -4,8 +4,6 @@
 > #### Запуск проект
 1. docker-compose build
 2. docker-compose up
-3. docker exec -ti container_<ваша_фамилия> python manage.py makemigrations
-4. docker exec -ti container_<ваша_фамилия> python manage.py migrate
 
 > #### Полезные команды:
 * sudo chown -R $USER /home/user/PycharmProjects/support/data
